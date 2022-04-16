@@ -2,10 +2,10 @@
   "name": "quark.tools",
   "version": "1.0.0",
   "license": "MIT",
-  "main": "quark.js",
+  "main": "ace.js",
   "type": "module",
   "scripts": {
-    "ace": "ace.js"
+    "ace": "node ./ace.js"
   },
   "bin": {
     "ace": "ace.js"
