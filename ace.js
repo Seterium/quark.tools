@@ -90,7 +90,5 @@ commander.exitOverride()
 try {
   commander.parse(process.argv);
 } catch (err) {
-  
-
   process.exit(0)
 }
