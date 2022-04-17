@@ -53,9 +53,7 @@ const validateSizes = (sizes) => {
   })
 }
 
-commander
-  .name('quark.tools')
-  .version('0.1');
+commander.name('ace')
 
 commander.command('imgp')
   .description('Генерация миниатюр и конвертации изображения')
