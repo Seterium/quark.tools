@@ -8,7 +8,7 @@ import path from 'path'
 const program = new Command()
 
 const getOriginFSDetails = (filename) => {
-  const abs = path.resolve(process.argv[1].replace(`\\ace`, ''), filename)
+  const abs = path.resolve(process.env.INIT_CWD, filename)
   const dir = path.dirname(abs)
   const ext = path.extname(abs).substring(1)
   const name = path.basename(abs, `.${ext}`)
@@ -57,7 +57,9 @@ program.command('convert')
     const converter = sharp(abs)
 
     formats.forEach((format) => {
-      converter.toFile(`${dir}/${file.name}.${format}`)
+      if (format !== file.ext) {
+        converter.toFile(`${dir}/${file.name}.${format}`)
+      }
     })
 
     sizes.forEach((size) => {
