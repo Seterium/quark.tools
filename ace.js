@@ -23,8 +23,10 @@ const getOriginFSDetails = (filename) => {
   }
 }
 
-const validateFormats = (formats) => {
-  const availableFormats = ['jpg', 'png', 'webp', 'avif']
+const validateFormats = (formats, customAllowed = []) => {
+  const availableFormats = customAllowed.length 
+    ? customAllowed 
+    : ['jpg', 'png', 'webp', 'avif']
 
   formats.every((format) => {
     const isInclude = availableFormats.includes(format)
@@ -55,7 +57,7 @@ const validateSizes = (sizes) => {
 
 commander.name('ace')
 
-commander.command('imgp')
+commander.command('generate')
   .description('Генерация миниатюр и конвертации изображения')
   .argument('<origin>', 'Путь к оригинальному файлу')
   .option('-s, --sizes [sizes...]', 'Список значений ширины миниатюр', [])
@@ -83,6 +85,46 @@ commander.command('imgp')
         resized.toFile(`${dir}/${file.name}${size}.${format}`)
       })
     })
+  })
+
+commander.command('optimize')
+  .description('Оптимизация изображения')
+  .argument('<origin>', 'Путь к оригинальному файлу')
+  .action((origin) => {
+    const { abs, dir, file } = getOriginFSDetails(origin)
+
+    validateFormats([ file.ext ], ['jpg', 'jpeg', 'png'])
+
+    const image = sharp(abs)
+
+    switch (file.ext) {
+      case 'jpg':
+        image.jpeg({
+          quality: 80,
+          progressive: true,
+          force: false
+        })
+        break;
+
+      case 'jpeg':
+        image.jpeg({
+          quality: 80,
+          progressive: true,
+          force: false
+        })
+        break;
+
+      case 'png':
+        image.jpeg({
+          compressionLevel: 8
+        })
+        break;
+    
+      default:
+        break;
+    }
+
+    image.toFile(`${dir}/min.${file.name}.${file.ext}`)
   })
 
 commander.exitOverride()
