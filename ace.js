@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import { Command } from 'commander'
 import sharp from 'sharp'
 
@@ -42,11 +44,11 @@ program
   .name('quark.tools')
   .version('0.1');
 
-program.command('resize')
-  .description('Convert image to webp')
+program.command('convert')
+  .description('Resize and convert image')
   .argument('<origin>', 'origin image path')
-  .option('-s, --sizes <sizes...>', 'specify sizes')
-  .option('-f, --formats [formats...]', 'specify formats', [])
+  .option('-s, --sizes [sizes...]', 'specify output images widths', [])
+  .option('-f, --formats [formats...]', 'specify output images formats', [])
   .action((origin, { sizes, formats }) => {
     validateImageFormats(formats)
 
@@ -67,18 +69,6 @@ program.command('resize')
         resized.toFile(`${dir}/${file.name}${size}.${format}`)
       })
     })
-  })
-
-program.command('convert')
-  .description('Convert image to webp')
-  .argument('<origin>', 'origin image path')
-  .argument('<target>', 'target image format')
-  .action((origin, target) => {
-    validateImageFormats([ target ])
-
-    const { abs, dir, file } = getOriginFSDetails(origin)
-
-    sharp(abs).toFile(`${dir}/${file.name}.${target}`)
   })
 
 program.parse()
